@@ -22,7 +22,7 @@ class AuthController extends Controller
         session()->flash('errors', [$e->getMessage()]);
          return redirect()->route('login')->withErrors(['email' => $e->getMessage()]);
     }
-
+    notify()->success('You are logged in!');
     return redirect()->intended('dashboard');
 }
 
@@ -44,6 +44,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        notify()->success('Account created!');
         return redirect()->intended('dashboard');
     }
 
@@ -51,6 +52,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         $request->session()->invalidate();
+        notify()->success('You are logged out!');
         return redirect('/');
     }
 

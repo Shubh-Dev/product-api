@@ -1,4 +1,6 @@
-<form method="POST" action="{{ route('login') }}">
+@extends('layouts.app')
+@section('content')
+<form method="POST" action="{{ route('login') }}" class="bg-gray-700">
     @csrf
     <div class="form-group row">
         <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
@@ -45,5 +47,7 @@
         </div>
     </div>
 </form>
+@endsection
+
 
 
