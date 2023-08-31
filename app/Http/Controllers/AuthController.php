@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use App\Models\User;
 use Hash;
+use Inertia\Inertia;
 
 class AuthController extends Controller
 {
@@ -20,33 +21,42 @@ class AuthController extends Controller
         Auth::attempt($credentials);
     } catch (AuthenticationException $e) {
         session()->flash('errors', [$e->getMessage()]);
-         return redirect()->route('login')->withErrors(['email' => $e->getMessage()]);
+         return Inertia::render('Login')->withErrors(['email' => $e->getMessage()]);
     }
     notify()->success('You are logged in!');
-    return redirect()->intended('dashboard');
+    return redirect('/dashboard');
 }
 
+// public function openLoginForm()
+// {
+//     return redirect('/login');
+// }
+
+public function openRegisterForm()
+{ 
+    return Inertia::render('Register');
+}
         
 
 
     public function register(Request $request ) 
     {
-        $this->validate($request, [
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password'=> 'required|string|min:8|confirmed',
+            'email' => 'required|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
         ]);
-
         $user = User::create([
             'name' => $request->name,
-            'email'=> $request->email,
-            'password'=> Hash::make($request->password),
+            'email' => $request->email, 
+            'password' => Hash::make($request->password),
         ]);
-
         Auth::login($user);
-        notify()->success('Account created!');
-        return redirect()->intended('dashboard');
+        notify()->success('You are logged in!');
+        return redirect('/dashboard');
     }
+
+
 
     public function logout(Request $request)
     {
