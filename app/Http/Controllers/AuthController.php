@@ -15,16 +15,20 @@ class AuthController extends Controller
    
     public function login(Request $request)
 {
-    $credentials = $request->only('email', 'password');
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-    try {
-        Auth::attempt($credentials);
-    } catch (AuthenticationException $e) {
-        session()->flash('errors', [$e->getMessage()]);
-         return Inertia::render('Login')->withErrors(['email' => $e->getMessage()]);
+    if (Auth::attempt($request->only('email', 'password'))) {
+        $request->session()->regenerate();
+        notify()->success('You are logged in!');
+        return Inertia::render('Dashboard');
     }
-    notify()->success('You are logged in!');
-    return redirect('/dashboard');
+
+    throw ValidationException::withMessages([
+        'email' => __('auth.failed'),
+    ]);
 }
 
 // public function openLoginForm()
@@ -37,10 +41,9 @@ public function openRegisterForm()
     return Inertia::render('Register');
 }
         
-
-
     public function register(Request $request ) 
     {
+        sleep(1);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|max:255',
@@ -53,6 +56,7 @@ public function openRegisterForm()
         ]);
         Auth::login($user);
         notify()->success('You are logged in!');
+        
         return redirect('/dashboard');
     }
 
