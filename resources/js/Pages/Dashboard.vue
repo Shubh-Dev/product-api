@@ -2,6 +2,7 @@
   <Layout>
     <div>
        <p>This is Dashboard</p> 
+       <!-- <button @click="notification">Show Notification</button> -->
        <br>
          <br>
          <br>
@@ -14,6 +15,7 @@
   </Layout>
 </template>
 <script setup>
+
 import { Link } from '@inertiajs/vue3'
 import Layout from './Layout.vue'
 </script>

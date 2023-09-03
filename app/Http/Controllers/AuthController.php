@@ -22,7 +22,7 @@ class AuthController extends Controller
 
     if (Auth::attempt($request->only('email', 'password'))) {
         $request->session()->regenerate();
-        notify()->success('You are logged in!');
+        smilify('success', 'You are successfully reconnected');
         return Inertia::render('Dashboard');
     }
 
@@ -47,7 +47,7 @@ public function openRegisterForm()
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:3|confirmed',
         ]);
         $user = User::create([
             'name' => $request->name,
