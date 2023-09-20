@@ -22,8 +22,8 @@ class AuthController extends Controller
 
     if (Auth::attempt($request->only('email', 'password'))) {
         $request->session()->regenerate();
-        smilify('success', 'You are successfully reconnected');
-        return Inertia::render('Dashboard');
+        $success = smilify('success', 'You are successfully reconnected');
+        return redirect()->intended('/dashboard')->with('success', $success);
     }
 
     throw ValidationException::withMessages([
